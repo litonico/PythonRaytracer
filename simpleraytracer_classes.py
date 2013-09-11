@@ -18,12 +18,12 @@ class Vector:
                       self.y + other.y, 
                       self.z + other.z)
                       
-    def dot(self, other): # dot product, might not work
+    def dot(self, other): # dot product
         return Vector(self.x * other.x, 
                       self.y * other.y, 
                       self.z * other.z)
     
-    def __sub__(self, other): # dot product
+    def __sub__(self, other): 
         return Vector(self.x - other.x, 
                       self.y - other.y, 
                       self.z - other.z)
@@ -46,12 +46,18 @@ class Vector:
                       scalar_mul(self.z, -1.0),
                       scalar_mul(self.z, -1.0)
         )
+    
+    def face_out(self, other): #for normals calculation
+        if dot(self, other) < 0.0:
+            return negate(self)
+        else:
+            return(self)
         
     def __eq__(self, other):
         return (self.x == other.x and self.y == other.y and self.z == other.z)
         
         
-class Point:
+class Point: # why not use vectors for everything 
     def __init__(self, xx, yy, zz):
         self.x = xx
         self.y = yy
@@ -70,13 +76,7 @@ class Point:
         return Vector(self.x - other.x, 
                       self.y - other.y, 
                       self.z - other.z)
-        
-    def negate(self): # probably don't need this
-        return Point(scalar_mul(self.x, -1.0),
-                      scalar_mul(self.z, -1.0),
-                      scalar_mul(self.z, -1.0)
-        )
-        
+                      
     def __eq__(self, other):
         return (self.x == other.x and self.y == other.y and self.z == other.z)
         
@@ -109,6 +109,16 @@ class Box:
     def __init__(self, width, height):
         self.width = width
         self.height = height
+
+#### BxDFs ####
+
+class BxDF:
+    #stuff
+    
+    
+class BRDF(BxDF):
+    
+
 
 
 class ppmBitmap:
