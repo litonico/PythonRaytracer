@@ -1,4 +1,8 @@
 from math import sqrt
+from subprocess import call
+
+
+Epsilon = 0.0001
 
 class Vector:
     def __init__(self, xx, yy, zz):
@@ -81,12 +85,34 @@ class Point: # why not use vectors for everything
         return (self.x == other.x and self.y == other.y and self.z == other.z)
         
 class Ray:
-    def init(self, origin, direction, depth):
+    def init(self, origin, direction, mint, maxt, depth):
         self.origin = origin
         self.direction = direction
         self.depth = depth
+        self.mint = mint
+        self.maxt = maxt
     # parenting rays?
+    
+    
+def DiscriminantCheck(A,B,C):
+    discriminant = B*B - 4.0*A*C
+    if discriminant <= 0.0:
+        return False
+    else:
+        return True
         
+def Quadratic(A, B, C):
+    discriminant = B*B - 4.0*A*C
+    rootDiscriminant = sqrt(discriminant)
+    if B < 0:
+        q = -0.5*(B - rootDiscriminant)
+    else:
+        q = -0.5*(B + rootDiscriminant)
+    root1 = q/A
+    root2 = C/q
+    if root1 < root2:
+        root1, root2 = root2, root1
+    return root1, root2
         
 null_Vector = Vector(0,0,0)
 null_Point = Point(0,0,0)
@@ -101,10 +127,24 @@ class Sphere:
     def __init__(self, center, radius):
         self.center = center
         self.radius = radius
-        
-        def intersect(self, ray):
-            pass
-            
+        '''
+    def intersect(self, ray):
+        A = ray.direction.x**2 + ray.direction.y**2 + ray.direction.z**2
+        B = 2 * (ray.direction.x*ray.origin.x + ray.direction.y*ray.origin.y + ray.direction.z*ray.origin.z)
+        C = ray.origin.x**2 + ray.origin.y**2 - ray.origin.z**2 self.radius**2
+        if not DiscriminantCheck(A,B,C):
+            return False
+        root1, root2 = Quadratic(A,B,C)
+        if root1 > ray.maxt or root2 < ray.mint:
+            return False
+        thit = root1
+        if root1 < ray.mint:
+            thit = root2
+            if thit > ray.maxt:
+                return False
+        return thit
+        '''
+                        
 class Box:
     def __init__(self, width, height):
         self.width = width
@@ -113,24 +153,34 @@ class Box:
 #### BxDFs ####
 
 class BxDF:
-    #stuff
+    pass#stuff
     
     
 class BRDF(BxDF):
-    
+    pass
 
 
 
 class ppmBitmap:
-    def __init__(width, height, name):
+    def __init__(self, width, height, name, ls_img_data):
         self.width = width
         self.height = height
         self.name = name
+        filename = name + '.ppm'
+        self.filename = filename
+        self.ls_img_data = ls_img_data # as a list
+        self.s_img_data = ' '.join(str(x) for x in ls_img_data) # transforms the list into a space-delimited string
+        self.img_file = open(filename, 'w') #creates file with name "name", overwrites if it exists
     
-    def writeBitmap(self):
-        myfile.write('P6/n%d %d/n255/n' %(self.width, self.height)) # pixelmap from 0 to 255
-        myfile.write()
+    def write(self):
+        self.img_file.write('P6\n%d %d\n255\n%s' %(self.width, self.height, self.s_img_data)) #basic ppm file format info, plus data
+        #myfile.close()
+        
+    def view(self):
+        displayimg = Image.open(self.filename) 
+        displayimg.show()
     
+        
 class Camera:
     def __init__(position = Point(0,0,0), lookat = Point(1,0,0) ):
         self.lookat = lookat
@@ -143,38 +193,53 @@ class Camera:
 
 
 class Scene:
-    def __init__(obj_list = [], lights_list = [], camera, depth):
+    def __init__(obj_list, lights_list, camera, depth):
         self.obj_list = obj_list
         self.lights_list = lights_list
     
     
     def render(self, canvas):
+        pass
         # Compute FOV
         # Render
         
-        #for each surface
-        for light in range(len(lights_list)):
-            if not is_blocked(lights_list[light]): #should is_blocked be a method of light or of scene?
-                incident_light = light.L(point)
-                amount_reflected = 
-                L += amount_reflected*incident_light
+        #for each surface, this is the general rendering loop
+        #for light in range(len(lights_list)):
+        #    if not is_blocked(lights_list[light]): #should is_blocked be a method of light or of scene?
+        #        incident_light = light.L(point)
+        #        amount_reflected = 
+        #        L += amount_reflected*incident_light
                 
-            
-    
-    
-    
-
-def viewimage():
-    from PIL import Image
-    displayimg = Image.open('myfile.ppm')
-    displayimg.show()
-    print "All Done!"
-    
-    
-    
+'''   
 s = Scene(
     [Sphere(Point(2,0,0), 2), ],
     [Light(Point(0.5, 1, 0)) ],
     Camera(Point(0, 0.5, 0), Point(1, 0.5, 0)), 
     3
     )
+    
+s.render
+viewimage(myfile_path)
+'''
+
+### tests ###
+#try:
+ppmtest_image_data = [255, 0, 0, 
+                          0, 255, 0, 
+                          0, 0, 255, 
+                          255, 255, 0,
+                          255, 255, 255,
+                          0, 0, 0,
+                          0, 255, 255,
+                          75, 75, 75,
+                          127, 127, 127,
+                          150, 150, 150,
+                          150, 150, 150,
+                          150, 150, 150]
+ppmtest_image = ppmBitmap(3, 4, "PPM Test", ppmtest_image_data)
+ppmtest_image.write()
+ppmtest_image.view()
+    
+print "bitmap-writing test: passed!"
+#except:
+print "bitmap-writing test: failed."
