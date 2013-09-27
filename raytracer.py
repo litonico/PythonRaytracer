@@ -71,10 +71,18 @@ def render(canvas, scene, camera):
     
     for x in range(canvas.width, 0, -1):
         for y in range(canvas.height, , 0, -1): # For each pixel in the image,
+            min_distance = INFINITY # the distance to the closest object in the scene
+            current_obj = None
             for obj in enumerate(obj_list): # check if a ray shot through that pixel
                 hit = obj.intersect(ray)    # intersects an object.
-                if hit is not False:        # if it does, 
-                    distance = Distance(camera.position, hit)
+                if hit is not False:        # if it does, and hit is a float,
+                    distance = Distance(camera.position, hit) # set the distance variable
+                    if distance < min_distance:     # and check if it's the closest; if so,
+                        min_distance = distance     # update min_distance, and
+                        current_obj = obj           # record what object it is.
+            if current_object is not None:
+                # //COMPUTE ILLUMINATION
+                shadow_ray = Ray(, )# once the closest object is found,
         
             #for r in range(rays_per_px):
             
