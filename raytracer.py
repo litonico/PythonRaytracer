@@ -57,7 +57,7 @@ class Scene:
         self.lights_list = lights_list
     
   
-  
+#### KSP??????
   
     
 def render(canvas, scene, camera):
@@ -70,7 +70,7 @@ def render(canvas, scene, camera):
     background_color = Color(0,0,0)
     
     for x in range(canvas.width, 0, -1):
-        for y in range(canvas.height, , 0, -1): # For each pixel in the image,
+        for y in range(canvas.height, 0, -1): # For each pixel in the image,
             min_distance = INFINITY # the distance to the closest object in the scene
             current_obj = None
             for obj in enumerate(obj_list): # check if a ray shot through that pixel
@@ -83,6 +83,16 @@ def render(canvas, scene, camera):
             if current_object is not None:
                 # //COMPUTE ILLUMINATION
                 shadow_ray = Ray(, )# once the closest object is found,
+                occluded = False
+                for obj in enumerate(obj_list):
+                    hit = obj.intersect(shadow_ray)
+                    if hit is not False:
+                        occluded = True
+                        break
+                if not occluded:
+                    # return object  color times light brightness
+                else:
+                    # return shadow color
         
             #for r in range(rays_per_px):
             

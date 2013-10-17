@@ -132,4 +132,24 @@ class RGBColor:
         self.g = green
         self.b = blue
          
-def distance()
+# Vector methods
+def Distance(vec1, vec2):
+    return sqrt()
+    
+def Dot(vec1, vec2):
+    return Vector(vec1.x * vec2.x, 
+                  vec1.y * vec2.y, 
+                  vec1.z * vec2.z)
+                  
+def Cross(vec1, vec2):
+    return Vector(vec1.y * vec2.z - vec1.z * vec2.y,
+                  vec1.z * vec2.x - vec1.x * vec2.z,
+                  vec1.x * vec2.y - vec1.y * vec2.x)
+
+def Scalar_mul(vec1, scalar):
+        return Vector(self.x * scalar,
+                      self.y * scalar,
+                      self.z * scalar)
+
+def Normalize(vec1):
+    return Scalar_mul(vec1, 1.0/vec1.magnitude())
