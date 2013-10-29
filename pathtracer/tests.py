@@ -10,10 +10,14 @@ class TestSphere(unittest.TestCase):
 			self.origin, 1.0
 			)
 	
-	def test__sphere_intersection(self):
+	def test_sphere_intersection(self):
 		# ray-sphere intersection
 		intersection_pt = self.sphere.intersect(self.ray)
 		self.assertEqual(intersection_pt, Point(1.0,0,0))
+
+	def test_sphere_normal(self):
+		point = Point(0, 2, 0)
+		self.assertEqual(self.sphere.normal(point), Point(0,1,0) )
 
 class TestPlane(unittest.TestCase):
 	def setUp(self):
@@ -24,6 +28,10 @@ class TestPlane(unittest.TestCase):
 	def test__plane_intersection(self):
 		intersection_pt = self.plane.intersect(self.ray)
 		self.assertEqual(intersection_pt, Point(1,0,0))
+
+	def test_plane_normal(self):
+		point = Point(0, 1, 0)
+		self.assertEqual(self.plane.normal(point), Point(0,1,0) )
 
 
 if __name__=='__main__':

@@ -2,8 +2,10 @@ from geometry import *
 from math import sqrt
 class Shape:
     def intersect(self, ray):
-        raise Exception("Unimplemented Intersect Method")
+        raise Exception("Unimplemented intersect() Method")
         # each Shape should implement its own intersect method
+    def normal(self, point):
+        raise Exception("Unimplemented normal() Method")
 
 
 
@@ -17,8 +19,8 @@ class Sphere(Shape):
         # returns the point along the ray where the ray hits the sphere
         distance = ray.origin - self.center
         assert isinstance(distance, Vector)
-        B = distance.dot(ray.direction)
-        C = distance.dot(distance) - self.radius**2
+        B = Dot(distance, ray.direction)
+        C = Dot(distance, distance) - self.radius**2
         discriminant = B*B - C
 
         if discriminant > 0:
@@ -26,6 +28,9 @@ class Sphere(Shape):
             return ray.origin + ray.direction.scalar_mul((- B - sqrt(discriminant))) # what about -B + sqrt(D)?
         else: 
             return False # a hit did not occur
+
+    def normal(self, point):
+        return Normalize(point - self.center)
                         
 class Box(Shape):
     def __init__(self, width, height):
@@ -36,12 +41,15 @@ class Box(Shape):
         pass #uhhh...
     
 class Plane(Shape):
-    def __init__(self, center, normal):
+    def __init__(self, center, upvector):
         self.center = center
-        self.normal = normal
+        self.upvector = Normalize(upvector)
         
     def intersect(self, ray):
         distance = self.center - ray.origin
-        A = ray.direction.dot(self.normal)
+        A = Dot(ray.direction, self.upvector)
         if A != 0:
-            return ray.origin + ray.direction.scalar_mul((distance.dot(self.normal)/A))
+            return ray.origin + ray.direction.scalar_mul(Dot(distance, self.upvector)/A)
+
+    def normal(self, point):
+        return self.upvector

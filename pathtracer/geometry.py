@@ -1,5 +1,4 @@
-
-import math
+from math import sqrt
 Epsilon = 0.0001
 
 class Vector:
@@ -10,9 +9,12 @@ class Vector:
         self.isVector = True
     
     #str, repr, etc
+    def __repr__(self):
+        return str((self.x, self.y, self.z))
+    
     
     def magnitude(self):
-        return sqrt(self.x+self.y+self.z)
+        return sqrt(self.x**2+self.y**2+self.z**2)
     
     def __add__(self, other):
         #if point, return point
@@ -121,12 +123,12 @@ class Color:
          
 # Vector methods
 def Distance(vec1, vec2):
-    return sqrt()
+    return sqrt(vec1.x*vec2.x + vec1.y*vec2.y + vec1.z*vec2.z)
     
 def Dot(vec1, vec2):
-    return Vector(vec1.x * vec2.x, 
-                  vec1.y * vec2.y, 
-                  vec1.z * vec2.z)
+    return (vec1.x * vec2.x+ 
+            vec1.y * vec2.y+
+            vec1.z * vec2.z)
                   
 def Cross(vec1, vec2):
     return Vector(vec1.y * vec2.z - vec1.z * vec2.y,
@@ -134,9 +136,9 @@ def Cross(vec1, vec2):
                   vec1.x * vec2.y - vec1.y * vec2.x)
 
 def Scalar_mul(vec1, scalar):
-        return Vector(self.x * scalar,
-                      self.y * scalar,
-                      self.z * scalar)
+    return Vector(vec1.x * scalar,
+                  vec1.y * scalar,
+                  vec1.z * scalar)
 
 def Normalize(vec1):
-    return Scalar_mul(vec1, 1.0/vec1.magnitude())
+    return Scalar_mul(vec1, 1.0/vec1.magnitude() )
