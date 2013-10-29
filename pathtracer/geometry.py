@@ -86,30 +86,9 @@ class Ray:
         self.direction = direction
 
     # parenting rays?
-    
-    
-def DiscriminantCheck(A,B,C):
-    discriminant = B*B - 4.0*A*C
-    if discriminant <= 0.0:
-        return False
-    else:
-        return True
-        
-def Quadratic(A, B, C):
-    discriminant = B*B - 4.0*A*C
-    rootDiscriminant = sqrt(discriminant)
-    if B < 0:
-        q = -0.5*(B - rootDiscriminant)
-    else:
-        q = -0.5*(B + rootDiscriminant)
-    root1 = q/A
-    root2 = C/q
-    if root1 < root2:
-        root1, root2 = root2, root1
-    return root1, root2
         
 null_Vector = Vector(0,0,0)
-null_Point = Point(0,0,0)
+origin = Point(0,0,0)
 
 class Basis:
     def __init__(self, xx, yy, zz):
