@@ -71,8 +71,8 @@ class Point:
     def __add__(self, other):
         assert other.isVector == True
         return Point(self.x + other.x, 
-                      self.y + other.y, 
-                      self.z + other.z)
+                     self.y + other.y, 
+                     self.z + other.z)
                       
     def __sub__(self, other): # subtracting points gives a vector
         return Vector(self.x - other.x, 
@@ -131,6 +131,18 @@ class RGBColor:
         self.r = red
         self.g = green
         self.b = blue
+
+class Color:
+    def __init__(self, red, green, blue):
+        self.r = red
+        self.g = green
+        self.b = blue
+    def __add__(self, other):
+        return Color(self.r+other.r, self.g+other.g, self.b+other.b)
+    def __sub__(self, other):
+        return Color(self.r-other.r, self.g-other.g, self.b-other.b)
+    def __mul__(self, other):
+        return Color(self.r*other.r, self.g*other.g, self.b*other.b)
          
 # Vector methods
 def Distance(vec1, vec2):
