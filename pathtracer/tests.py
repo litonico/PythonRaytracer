@@ -17,7 +17,8 @@ class TestSphere(unittest.TestCase):
 
 	def test_sphere_normal(self):
 		point = Point(0, 2, 0)
-		self.assertEqual(self.sphere.normal(point), Point(0,1,0) )
+		assert isinstance(self.sphere.normal(point), Vector)
+		self.assertEqual(self.sphere.normal(point), Vector(0,1,0) )
 
 class TestPlane(unittest.TestCase):
 	def setUp(self):
@@ -31,7 +32,8 @@ class TestPlane(unittest.TestCase):
 
 	def test_plane_normal(self):
 		point = Point(0, 1, 0)
-		self.assertEqual(self.plane.normal(point), Point(0,1,0) )
+		assert isinstance(self.plane.normal(point), Vector)
+		self.assertEqual(self.plane.normal(point), Vector(0,1,0) )
 
 
 if __name__=='__main__':
