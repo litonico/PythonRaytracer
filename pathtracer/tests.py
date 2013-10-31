@@ -35,6 +35,15 @@ class TestPlane(unittest.TestCase):
 		assert isinstance(self.plane.normal(point), Vector)
 		self.assertEqual(self.plane.normal(point), Vector(0,1,0) )
 
+class TestTrace(unittest.TestCase):
+	def setUp(self):
+		self.origin = Point(0,0,0)
+		self.plane = Plane(self.origin, Vector(0,1,0))
+		self.sphere = Sphere(Point(0,1,0), 1)
+		self.diffuse = Color(0.8, 0.8, 0.8)
+		#scene.add(self.sphere, self.plane)
+
+
 
 if __name__=='__main__':
 	unittest.main()
