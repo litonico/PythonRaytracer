@@ -1,11 +1,13 @@
+'''
+Adapted from NIKITA NIKISHIN's simple Python path tracer
+'''
+
 from geometry import *
 import random as rand
 from math import sqrt
 
 def generate_random_hemisphere_normal(v):
 	v2 = normalize(Vector(rand.uniform(-1,1), rand.uniform(-1,1), rand.uniform(-1,1)))
-
-background_color = Color(0,0,0)
 
 def Trace(ray, scene, bounces = 0):
 	if n > 10:

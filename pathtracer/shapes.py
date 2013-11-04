@@ -14,7 +14,7 @@ class Sphere(Shape):
         assert isinstance(center, Point)
         self.center = center
         self.radius = radius
-        
+    
     def intersect(self, ray):
         # returns the point along the ray where the ray hits the sphere
         distance = ray.origin - self.center
@@ -25,7 +25,7 @@ class Sphere(Shape):
 
         if discriminant > 0:
             ''' - B - sqrt(discriminant) returns the distance along the ray where the intersection occurs. This transforms that into an instance of Point'''
-            return ray.origin + ray.direction.scalar_mul((- B - sqrt(discriminant))) # what about -B + sqrt(D)?
+            return ray.origin + ray.direction.scalar_mul((- B - sqrt(discriminant))) # what about -B + sqrt(D)? A and B are always positive, so this will give the closest root
         else: 
             return False # a hit did not occur
 

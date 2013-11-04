@@ -1,6 +1,8 @@
 import unittest
 from geometry import *
 from shapes import *
+from utility import *
+from PIL import Image as PILImage
 
 class TestSphere(unittest.TestCase):
 	def setUp(self):
@@ -32,7 +34,7 @@ class TestPlane(unittest.TestCase):
 
 	def test_plane_normal(self):
 		point = Point(0, 1, 0)
-		assert isinstance(self.plane.normal(point), Vector)
+		self.assertTrue(isinstance(self.plane.normal(point), Vector))
 		self.assertEqual(self.plane.normal(point), Vector(0,1,0) )
 
 class TestTrace(unittest.TestCase):
@@ -43,6 +45,27 @@ class TestTrace(unittest.TestCase):
 		self.diffuse = Color(0.8, 0.8, 0.8)
 		#scene.add(self.sphere, self.plane)
 
+class TestImage(unittest.TestCase):
+	def setUp(self):
+		self.image = Image(10, 10)
+
+	def test_getting_and_setting_colors(self):
+		self.image.setPixel(5, 5, Color(0.5, 0.4, 0.5))
+		self.assertEqual(self.image.getPixel(5, 5), Color(0.5,0.4,0.5))
+		self.assertEqual(self.image.getPixel(4, 4), Color(0,0,0))
+		#check every value for correctness
+		for x in range(self.image.width):
+			for y in range(self.image.height):
+				if x == 5 and y == 5:
+					self.assertEqual(self.image.getPixel(x,y), Color(0.5,0.4,0.5))
+				else:
+					self.assertEqual(self.image.getPixel(x,y), Color(0,0,0))
+	
+	def test_writing_image(self):
+		self.image.save(1, 'test_writing_image.ppm')
+		im = PIL.Image.open('test_writing_image.ppm')
+		im.show()
+		
 
 
 if __name__=='__main__':

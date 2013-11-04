@@ -41,12 +41,12 @@ class Vector:
                       self.x * other.y - self.y * other.x)
                       
     def normalize(self):
-        return scalar_mul(self, 1.0/self.magnitude())
+        return Scalar_mul(self, 1.0/self.magnitude())
         
     def negate(self):
-        return Vector(scalar_mul(self.x, -1.0),
-                      scalar_mul(self.z, -1.0),
-                      scalar_mul(self.z, -1.0)
+        return Vector(self.x * -1.0,
+                      self.z * -1.0,
+                      self.z, * 1.0
         )
     
     def face_out(self, other): #for normals calculation
@@ -67,6 +67,9 @@ class Point:
         self.isPoint = True
     
     #str, repr, etc
+    def __repr__(self):
+        return str((self.x, self.y, self.z))
+    
     
     def __add__(self, other):
         assert other.isVector == True
@@ -85,7 +88,7 @@ class Point:
 class Ray:
     def __init__(self, origin, direction):
         self.origin = origin
-        self.direction = direction
+        self.direction = Normalize(direction)
 
     # parenting rays?
         
@@ -102,24 +105,6 @@ std_basis = Basis(Vector(1,0,0),
                   Vector(0,1,0),
                   Vector(0,0,1)
                   )
-        
-class RGBColor:
-    def __init__(self, red, green, blue):
-        self.r = red
-        self.g = green
-        self.b = blue
-
-class Color:
-    def __init__(self, red, green, blue):
-        self.r = red
-        self.g = green
-        self.b = blue
-    def __add__(self, other):
-        return Color(self.r+other.r, self.g+other.g, self.b+other.b)
-    def __sub__(self, other):
-        return Color(self.r-other.r, self.g-other.g, self.b-other.b)
-    def __mul__(self, other):
-        return Color(self.r*other.r, self.g*other.g, self.b*other.b)
          
 # Vector methods
 def Distance(vec1, vec2):
