@@ -2,7 +2,7 @@ import unittest
 from geometry import *
 from shapes import *
 from utility import *
-import Image as PILImage
+import os
 
 class TestSphere(unittest.TestCase):
 	def setUp(self):
@@ -59,8 +59,8 @@ class TestImage(unittest.TestCase):
 
 	def test_getting_and_setting_colors_one_sample(self):
 		self.image.setPixel(5, 5, Color(0.5, 0.4, 0.5))
-		self.assertEqual(self.image.getPixel(5, 5), Color(0.5,0.4,0.5))
-		self.assertEqual(self.image.getPixel(4, 4), Color(0,0,0))
+		self.assertEqual(self.image.getPixel(5, 5), Color(0.5, 0.4, 0.5))
+		self.assertEqual(self.image.getPixel(4, 4), Color(0, 0, 0))
 		#check every value for correctness
 		for x in range(self.image.width):
 			for y in range(self.image.height):
@@ -70,9 +70,9 @@ class TestImage(unittest.TestCase):
 					self.assertEqual(self.image.getPixel(x,y), Color(0,0,0))
 	
 	def test_writing_image(self):
+		self.image.setPixel(5,5, Color(1, 1, 1))
 		self.image.save(1, 'test_writing_image.ppm')
-		im = PILImage.open('test_writing_image.ppm')
-		im.show()
+		os.system("open test_writing_image.ppm")
 
 
 if __name__=='__main__':

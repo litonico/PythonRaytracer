@@ -88,9 +88,9 @@ class Image:
 				raw_pixel = self.image[x][y]/float(samples)
 				assert isinstance(raw_pixel, Color)
 				pixel = raw_pixel.Clamp(0, 1)
-				# pixel = Clamp(self.image[x][self.height - 1 - y] / float(samples)).list() # I don't understand this line
 
 				contents += '{0} {1} {2} '.format(int(255 * pixel.r), int(255 * pixel.g), int(255 * pixel.b))
+
 			contents += '\n'
 
 		this_file.write(contents)
