@@ -2,7 +2,7 @@ import unittest
 from geometry import *
 from shapes import *
 from utility import *
-from PIL import Image as PILImage
+import Image as PILImage
 
 class TestSphere(unittest.TestCase):
 	def setUp(self):
@@ -45,17 +45,13 @@ class TestTrace(unittest.TestCase):
 		self.diffuse = Color(0.8, 0.8, 0.8)
 		#scene.add(self.sphere, self.plane)
 
-class TestColor:
+class TestColor(unittest.TestCase):
 	def setUp(self):
 		self.color = Color(1,0,0)
 
-	def testRange(self):
-		self.out_of_range = Color(2.5, 133, -5)
-		assertEqual(self.out_of_range, Color(1, 1, 0))
-
-	def testMath(self):
-		self.color_list = [Color(1,4,5), Color(0.5, 0.23, 0.7)]
-		AssertEqual(Average(color_list), )
+	#def test_range(self):
+	#	self.out_of_range = Color(2.5, 133, -5)
+	#	self.assertEqual(self.out_of_range, Color(1, 1, 0))
 
 class TestImage(unittest.TestCase):
 	def setUp(self):
@@ -63,21 +59,20 @@ class TestImage(unittest.TestCase):
 
 	def test_getting_and_setting_colors_one_sample(self):
 		self.image.setPixel(5, 5, Color(0.5, 0.4, 0.5))
-		self.assertEqual(self.image.getPixel(5, 5)[0], Color(0.5,0.4,0.5))
-		self.assertEqual(self.image.getPixel(4, 4), [])
+		self.assertEqual(self.image.getPixel(5, 5), Color(0.5,0.4,0.5))
+		self.assertEqual(self.image.getPixel(4, 4), Color(0,0,0))
 		#check every value for correctness
 		for x in range(self.image.width):
 			for y in range(self.image.height):
 				if x == 5 and y == 5:
-					self.assertEqual(self.image.getPixel(x,y)[0], Color(0.5,0.4,0.5))
+					self.assertEqual(self.image.getPixel(x,y), Color(0.5,0.4,0.5))
 				else:
-					self.assertEqual(self.image.getPixel(x,y), [])
+					self.assertEqual(self.image.getPixel(x,y), Color(0,0,0))
 	
-	#def test_writing_image(self):
-	#	self.image.save(1, 'test_writing_image.ppm')
-	#	im = PIL.Image.open('test_writing_image.ppm')
-	#	im.show()
-		
+	def test_writing_image(self):
+		self.image.save(1, 'test_writing_image.ppm')
+		im = PILImage.open('test_writing_image.ppm')
+		im.show()
 
 
 if __name__=='__main__':

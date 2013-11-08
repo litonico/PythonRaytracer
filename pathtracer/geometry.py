@@ -129,7 +129,7 @@ def Normalize(vec1):
 	return Scalar_mul(vec1, 1.0/vec1.magnitude() )
 
 # other utility methods
-def Clamp(n, high, low):
+def Clamp(n, low, high):
 	if n > high:
 		return high
 	elif n < low:

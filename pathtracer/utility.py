@@ -1,31 +1,39 @@
 from geometry import Clamp
 
-class RGBColor:
-    def __init__(self, red, green, blue):
-        self.r = red
-        self.g = green
-        self.b = blue
-
 class Color:
-    def __init__(self, red, green, blue):
-        self.r = Clamp(red, 1, 0)
-        self.g = Clamp(green, 1, 0)
-        self.b = Clamp(green, 1, 0)
+	def __init__(self, red, green, blue):
+		self.r = red
+		self.g = green
+		self.b = blue
 
-    def __repr__(self):
-    	return str(self.r) + " " + str(self.g) +  " " + str(self.b)
+	def __repr__(self):
+		return str(self.r) + " " + str(self.g) +  " " + str(self.b)
 
-    def __add__(self, other):
-        return Color(self.r+other.r, self.g+other.g, self.b+other.b)
+	def __add__(self, other):
+		return Color(self.r+other.r, self.g+other.g, self.b+other.b)
 
-    def __sub__(self, other):
-        return Color(self.r-other.r, self.g-other.g, self.b-other.b)
-    
-    def __mul__(self, other):
-        return Color(self.r*other.r, self.g*other.g, self.b*other.b)
-    
-    def __eq__(self, other):
-    	return (self.r == other.r and self.g == other.g and self.b == other.b)
+	def __sub__(self, other):
+		return Color(self.r-other.r, self.g-other.g, self.b-other.b)
+	
+	def __mul__(self, other):
+		return Color(self.r*other.r, self.g*other.g, self.b*other.b)
+
+	def __div__(self, other):
+		assert other != 0
+		if isinstance(other, Color):
+			return Color(self.r/other.r, self.g/other.g, self.b/other.b)
+		else:
+			return Color(self.r/other, self.g/other, self.b/other)
+	
+	def __eq__(self, other):
+		return (self.r == other.r and self.g == other.g and self.b == other.b)
+
+	def Clamp(self, low, high):
+		return Color(Clamp(self.r, low, high), 
+					 Clamp(self.g, low, high),
+					 Clamp(self.b, low, high),
+			)
+
 
 class Scene:
 	def __init__(self, objects, camera):
@@ -61,12 +69,11 @@ class Image:
 		self.width = width
 		self.height = height
 		# image is a matrix of empty lists by default
-		self.image = [[ [] for i in range(height)] for j in range(width)]
+		self.image = [[ Color(0, 0, 0) for i in range(height)] for j in range(width)]
 
 	def getPixel(self, x, y):
 		#returns a list of the samples at a pixel
 		return self.image[x][y]
-
 
 	def setPixel(self, x, y, color):
 		assert isinstance(color, Color)
@@ -78,11 +85,9 @@ class Image:
 
 		for y in range(self.height):
 			for x in range(self.width):
-				raw_pixel = self.image[x][y]
-				if not raw_pixel: #if the pixel is empty
-					pixel = Color(0,0,0)
-				else: 
-					pixel = sum(raw_pixel)/float(samples)
+				raw_pixel = self.image[x][y]/float(samples)
+				assert isinstance(raw_pixel, Color)
+				pixel = raw_pixel.Clamp(0, 1)
 				# pixel = Clamp(self.image[x][self.height - 1 - y] / float(samples)).list() # I don't understand this line
 
 				contents += '{0} {1} {2} '.format(int(255 * pixel.r), int(255 * pixel.g), int(255 * pixel.b))
