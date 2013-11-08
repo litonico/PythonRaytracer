@@ -1,3 +1,5 @@
+from geometry import Clamp
+
 class RGBColor:
     def __init__(self, red, green, blue):
         self.r = red
@@ -6,9 +8,9 @@ class RGBColor:
 
 class Color:
     def __init__(self, red, green, blue):
-        self.r = red
-        self.g = green
-        self.b = blue
+        self.r = Clamp(red, 1, 0)
+        self.g = Clamp(green, 1, 0)
+        self.b = Clamp(green, 1, 0)
 
     def __repr__(self):
     	return str(self.r) + " " + str(self.g) +  " " + str(self.b)
@@ -58,15 +60,17 @@ class Image:
 	def __init__(self, width, height):
 		self.width = width
 		self.height = height
-		# image is black by default
-		self.image = [[Color(0,0,0) for i in range(height)] for j in range(width)]
+		# image is a matrix of empty lists by default
+		self.image = [[ [] for i in range(height)] for j in range(width)]
 
 	def getPixel(self, x, y):
+		#returns a list of the samples at a pixel
 		return self.image[x][y]
+
 
 	def setPixel(self, x, y, color):
 		assert isinstance(color, Color)
-		self.image[x][y] = color
+		self.image[x][y] += color
 		
 	def save(self, samples, filename):
 		this_file = open(filename, 'w+')
@@ -74,8 +78,12 @@ class Image:
 
 		for y in range(self.height):
 			for x in range(self.width):
-
-				pixel = Clamp(self.image[x][self.height -1 -y] / float(samples)).list() # I don't understand this line
+				raw_pixel = self.image[x][y]
+				if not raw_pixel: #if the pixel is empty
+					pixel = Color(0,0,0)
+				else: 
+					pixel = sum(raw_pixel)/float(samples)
+				# pixel = Clamp(self.image[x][self.height - 1 - y] / float(samples)).list() # I don't understand this line
 
 				contents += '{0} {1} {2} '.format(int(255 * pixel.r), int(255 * pixel.g), int(255 * pixel.b))
 			contents += '\n'
