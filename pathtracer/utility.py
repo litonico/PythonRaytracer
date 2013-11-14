@@ -1,4 +1,4 @@
-from geometry import Clamp
+from geometry import *
 
 class Color:
 	def __init__(self, red, green, blue):
@@ -28,41 +28,74 @@ class Color:
 	def __eq__(self, other):
 		return (self.r == other.r and self.g == other.g and self.b == other.b)
 
-	def Clamp(self, low, high):
+	def clamp(self, low, high):
 		return Color(Clamp(self.r, low, high), 
 					 Clamp(self.g, low, high),
-					 Clamp(self.b, low, high),
+					 Clamp(self.b, low, high)
 			)
-
+	def add(self, num):
+		return Color(self.r + num, 
+					 self.g + num,
+					 self.b + num)
 
 class Scene:
-	def __init__(self, objects, camera):
-		self.objects = objects
+	def __init__(self, name, camera = None):
+		self.name = name
+		self.objects = []
 		self.camera = camera
 		self.background_color = Color(0,0,0)
 
 class ImagePlane:
-	def __init__(self, width, height, offset, pixel_density):
-		super(ImagePlane, self).__init__()
+	def __init__(self, width, height):
 		self.width = width
 		self.height = height
-		self.offset = offset
-		self.pixel_density = pixel_density
-		self.canvas_width = int(self.width * self.pixel_density)
-		self.canvas_height = int(self.height * self.pixel_density)
 		
 
 class Camera:
-	def __init__(self, position, lookat, imageplane):
+	def __init__(self, position, lookat, imageplane, fov):
+
 		self.position = position
-		self.direction = Normalize(position - lookat)
-		self.imageplane = imageplane
-'''
-	def castRay(self):
-		x = Vector(x * (self.imageplane.width)/float(self.imageplane.canvas_width)
-		return Ray(self.position, 
+		self.direction = Normalize(lookat - position)
+
+		# construct a Vector perpendicular to direction, with y-component 0
+		self.rightVector = Normalize(
+			Vector(0.0 - self.position.z, 0.0, self.position.x) # wrong wrong wrong
 			)
-'''
+		# and an up-vector perpendicular to the other two
+		self.upVector = Cross(self.direction, self.rightVector)
+
+		self.imageplane = imageplane
+		self.fov = fov
+		self.pixelsWidth = fov/float(self.imageplane.width)
+		self.pixelsHeight = fov/float(self.imageplane.height)
+
+		# Give the camera an orientation: the 
+
+	def castRay(self, x, y):
+
+		# image plane is a 1x1 square, with imageplane.width divisons horizontally,
+		# and imageplane.height divisions vertically
+		x = x / float(self.imageplane.width)
+		y = y / float(self.imageplane.height)
+
+		# x *= -1.0 # the image origin is at the top-left, but the rightVector points right
+		# ????? why don't I need this ?????
+
+		x -= 0.5 #offset by half the image plane so that 0,0 is the top-left rather than the middle
+		y -= 0.5
+
+		ray_target = Scalar_mul(self.rightVector, x) + Scalar_mul(self.upVector, y) + Scalar_mul(self.direction, self.fov)
+		#print ray_target
+
+		# currently, x = 0 and y = 0 is in the middle of the image plane
+		# they need to be offset by half the width (x) or height (y)
+
+
+
+		return Ray(
+			self.position,
+			self.direction - ray_target
+			)
 
 class Image:
 	def __init__(self, width, height):
@@ -87,7 +120,7 @@ class Image:
 			for x in range(self.width):
 				raw_pixel = self.image[x][y]/float(samples)
 				assert isinstance(raw_pixel, Color)
-				pixel = raw_pixel.Clamp(0, 1)
+				pixel = raw_pixel.clamp(0, 1)
 
 				contents += '{0} {1} {2} '.format(int(255 * pixel.r), int(255 * pixel.g), int(255 * pixel.b))
 

@@ -41,7 +41,9 @@ class Vector:
 					  self.x * other.y - self.y * other.x)
 					  
 	def normalize(self):
-		return Scalar_mul(self, 1.0/self.magnitude())
+		denominator = self.magnitude()
+		assert denominator != 0
+		return Scalar_mul(self, 1.0/denominator)
 		
 	def negate(self):
 		return Vector(self.x * -1.0,
@@ -90,6 +92,9 @@ class Ray:
 		self.origin = origin
 		self.direction = Normalize(direction)
 
+	def __repr__(self):
+		return "O: " + str(self.origin) + " D: " + str(self.direction)
+
 	# parenting rays?
 		
 null_Vector = Vector(0,0,0)
@@ -126,7 +131,9 @@ def Scalar_mul(vec1, scalar):
 				  vec1.z * scalar)
 
 def Normalize(vec1):
-	return Scalar_mul(vec1, 1.0/vec1.magnitude() )
+	denominator = vec1.magnitude()
+	if denominator == 0: return vec1
+	return Scalar_mul(vec1, 1.0/denominator)
 
 # other utility methods
 def Clamp(n, low, high):
@@ -136,5 +143,12 @@ def Clamp(n, low, high):
 		return low
 	else: return n
 
+def RandHemisphereNormal(v):
+	rand_vector = Normalize(Vector(rand.uniform(-1,1), rand.uniform(-1,1), rand.uniform(-1,1)))
+
+	if Dot(v, rand_vector) < 0:
+		return Scalar_mul(rand_vector, -1)
+	else:
+		return rand_vector
 
 

@@ -1,6 +1,9 @@
 from geometry import *
 from math import sqrt
 class Shape:
+    def __init__(self):
+        self.emittance = 0
+
     def intersect(self, ray):
         raise Exception("Unimplemented intersect() Method")
         # each Shape should implement its own intersect method
