@@ -1,4 +1,6 @@
 from math import sqrt
+import random as rand
+
 Epsilon = 0.0001
 
 class Vector:
@@ -94,6 +96,9 @@ class Ray:
 
 	def __repr__(self):
 		return "O: " + str(self.origin) + " D: " + str(self.direction)
+
+	def getPoint(self, time):
+		return self.origin + self.direction.scalar_mul(time)
 
 	# parenting rays?
 		

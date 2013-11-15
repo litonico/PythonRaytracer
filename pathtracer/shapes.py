@@ -27,8 +27,11 @@ class Sphere(Shape):
         discriminant = B*B - C
 
         if discriminant > 0:
-            ''' - B - sqrt(discriminant) returns the distance along the ray where the intersection occurs. This transforms that into an instance of Point'''
-            return ray.origin + ray.direction.scalar_mul((- B - sqrt(discriminant))) # what about -B + sqrt(D)? A and B are always positive, so this will give the closest root
+            ''' 
+            - B - sqrt(discriminant) returns the distance along the ray where 
+            the intersection occurs. This transforms that into an instance of Point
+            '''
+            return (- B - sqrt(discriminant)) # what about -B + sqrt(D)? A and B are always positive, so this will give the closest root
         else: 
             return False # a hit did not occur
 
@@ -52,7 +55,9 @@ class Plane(Shape):
         distance = self.center - ray.origin
         A = Dot(ray.direction, self.upvector)
         if A != 0:
-            return ray.origin + ray.direction.scalar_mul(Dot(distance, self.upvector)/A)
+            return (Dot(distance, self.upvector)/A)
+        else:
+            return False
 
     def normal(self, point):
         return self.upvector
