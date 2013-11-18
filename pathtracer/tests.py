@@ -25,6 +25,11 @@ class TestSphere(unittest.TestCase):
 		assert isinstance(self.sphere.normal(point), Vector)
 		self.assertEqual(self.sphere.normal(point), Vector(0,1,0) )
 
+	def test_negative_intersection(self):
+		self.ray = Ray(Point(-6,0,0), Vector(1,0,0))
+		intersection_pt = self.sphere.intersect(self.ray)
+		self.assertEqual(self.ray.getPoint(intersection_pt), Point(-1.0,0,0))
+
 class TestPlane(unittest.TestCase):
 	def setUp(self):
 		self.origin = Point(0,0,0)
@@ -70,86 +75,29 @@ class TestImage(unittest.TestCase):
 		self.image.save(1, 'test_writing_image.ppm')
 		os.system("open test_writing_image.ppm")
 
-class xTestCamera(unittest.TestCase):
-	def setUp(self):
-		pass
-		
-
-class TestTracing(unittest.TestCase):
+class TestCamera(unittest.TestCase):
 	def setUp(self):
 		self.camera = Camera(
-			Point(-6, 0, 0), #position
-			Point(0,0,0),	#lookat
-			ImagePlane(300, 300), #image plane
-			2	#focal length
-			)
-
-		self.scene = Scene(
-			"test_scene", 
-			self.camera
-		)
-
-		self.scene.camera = self.camera
-		self.sphere = Sphere(Point(0,1,0), 1)
-		self.sphere.emittance = 1
-		self.sphere.diffuse = Color(0.5,1,1)
-		self.plane = Plane(Point(0,0,0), Vector(0,1,0))
-		self.plane.diffuse = Color(1,1,1)
-		self.plane.emittance = 1
-		self.scene.objects += [self.sphere]
-
-		self.image = Image(300, 300)
-
-	def test_scene_creation(self):
-		self.assertEqual(self.scene.objects, [self.sphere])
-		self.assertTrue(self.scene.camera.direction, Vector(1,0,0))
-		self.assertFalse(Sphere(Point(0,1,0), 1).intersect(self.scene.camera.castRay(0,0)))
-		self.assertEqual(self.scene.camera.imageplane.width, 300)
-		print "Dir, Right, Up"
-		print self.scene.camera.direction
-		print self.scene.camera.rightVector
-		print self.scene.camera.upVector
-
-
-
-	def xtest_check_simple_sphere_intersection(self):
-
-		for x in range(self.image.width):
-			for y in range(self.image.height):
-				ray = self.scene.camera.castRay(x,y)
-				for obj in self.scene.objects:
-					self.assertTrue(obj.__class__.__name__ == "Sphere")
-					#print obj.intersect(ray)
-					if obj.intersect(ray):
-						hit =  Color(1,1,1)
-					else: hit = Color(0,0,0)
-					self.image.setPixel(x, y, hit)
-					#if x == 150 and y == 150:
-					#	self.assertTrue(obj.intersect(ray))
-
-		self.image.save(1, 'test_intersecting.ppm')
-		os.system("open test_intersecting.ppm")
-
-	def test_simple_render(self):
-
-		self.camera = Camera(
-			Point(-6, 4, 0), #position
+			Point(-6, 1, 0), #position
 			Point(0,1,0),	#lookat
 			ImagePlane(300, 300), #image plane
 			2	#focal length
 			)
+		
+		self.sphere = Sphere(Point(0,1,0), 1)
+		self.sphere.emittance = 1
+		self.sphere.diffuse = Color(0.5,1,1)
 
-		self.scene.camera = self.camera
-		self.scene.objects += [self.plane]
+	def test_for_positive_sphere_intersection(self):
+		self.ray = self.camera.castRay(150,150)
+		assert isinstance(self.ray, Ray)
+		# intersection_pt = self.sphere.intersect(self.camera.castRay(150,150))
+		self.assertEqual(self.ray.direction, Vector(1,0,0))
 
-		self.scene.objects = [self.plane, self.sphere]
-		print self.scene.objects
-			
-
-		Render(self.scene, 1)
-		os.system("open test_scene.ppm")
-
-class TestUtilities(unittest.TestCase):
+	def test_upvector(self):
+		self.assertTrue(Dot(self.camera.upVector, Vector(0,1,0)) > 0)
+		
+class TestRandomNormals(unittest.TestCase):
 	def setUp(self):
 		self.vector = Vector(0,1,0)
 

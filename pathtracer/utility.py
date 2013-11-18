@@ -50,7 +50,6 @@ class ImagePlane:
 		self.width = width
 		self.height = height
 		
-
 class Camera:
 	def __init__(self, position, lookat, imageplane, fov):
 
@@ -59,7 +58,7 @@ class Camera:
 
 		# construct a Vector perpendicular to direction, with y-component 0
 		self.rightVector = Normalize(
-			Vector(0.0 - self.position.z, 0.0, self.position.x) # wrong wrong wrong
+			Vector(self.position.z, 0.0, 0.0-self.position.x)
 			)
 		# and an up-vector perpendicular to the other two
 		self.upVector = Cross(self.direction, self.rightVector)
@@ -69,32 +68,22 @@ class Camera:
 		self.pixelsWidth = fov/float(self.imageplane.width)
 		self.pixelsHeight = fov/float(self.imageplane.height)
 
-		# Give the camera an orientation: the 
-
 	def castRay(self, x, y):
+		# @refactor: needs a way to deal with non-square images.
 
 		# image plane is a 1x1 square, with imageplane.width divisons horizontally,
 		# and imageplane.height divisions vertically
 		x = x / float(self.imageplane.width)
 		y = y / float(self.imageplane.height)
 
-		# x *= -1.0 # the image origin is at the top-left, but the rightVector points right
-		# ????? why don't I need this ?????
-
-		x -= 0.5 #offset by half the image plane so that 0,0 is the top-left rather than the middle
-		y -= 0.5
+		x -= 0.5 # offset by half the image plane so that 0,0 is the top-left rather than the middle
+		y -= 0.5 
 
 		ray_target = Scalar_mul(self.rightVector, x) + Scalar_mul(self.upVector, y) + Scalar_mul(self.direction, self.fov)
-		#print ray_target
-
-		# currently, x = 0 and y = 0 is in the middle of the image plane
-		# they need to be offset by half the width (x) or height (y)
-
-
 
 		return Ray(
 			self.position,
-			self.direction - ray_target
+			ray_target - self.direction
 			)
 
 class Image:
@@ -127,4 +116,4 @@ class Image:
 			contents += '\n'
 
 		this_file.write(contents)
-		this_file.close
+		this_file.close()
